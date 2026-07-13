@@ -1,0 +1,565 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.1
+  creationTimestamp: null
+  name: endpoints.apim.cloudoor.com
+spec:
+  group: apim.cloudoor.com
+  names:
+    kind: Endpoint
+    listKind: EndpointList
+    plural: endpoints
+    singular: endpoint
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Endpoint is the Schema for the endpoints API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: EndpointSpec defines the desired state of Endpoint
+            properties:
+              auth:
+                properties:
+                  authPolicies:
+                    items:
+                      properties:
+                        methods:
+                          items:
+                            type: string
+                          type: array
+                        paths:
+                          items:
+                            type: string
+                          type: array
+                        permisionType:
+                          enum:
+                          - roles
+                          - groups
+                          - required_roles
+                          - required_groups
+                          type: string
+                        permissions:
+                          items:
+                            type: string
+                          minItems: 1
+                          type: array
+                      required:
+                      - methods
+                      - paths
+                      - permisionType
+                      - permissions
+                      type: object
+                    type: array
+                  ref:
+                    properties:
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                    required:
+                    - name
+                    - namespace
+                    type: object
+                type: object
+              backends:
+                items:
+                  properties:
+                    address:
+                      type: string
+                    caCertificate:
+                      type: string
+                    cluster_id:
+                      type: string
+                    cluster_name:
+                      type: string
+                    endpointID:
+                      type: string
+                    environmentID:
+                      type: string
+                    headers:
+                      additionalProperties:
+                        type: string
+                      type: object
+                    id:
+                      type: string
+                    online:
+                      type: boolean
+                    organizationID:
+                      type: string
+                    port:
+                      format: int32
+                      type: integer
+                    projectID:
+                      type: string
+                    protocol:
+                      enum:
+                      - tls
+                      - unsecure
+                      type: string
+                    requestHeadersPolicy:
+                      description: HeadersPolicy defines how headers are managed during
+                        forwarding. The `Host` header is treated specially and if
+                        set in a HTTP request will be used as the SNI server name
+                        when forwarding over TLS. It is an error to attempt to set
+                        the `Host` header in a HTTP response.
+                      properties:
+                        remove:
+                          description: Remove specifies a list of HTTP header names
+                            to remove.
+                          items:
+                            type: string
+                          type: array
+                        set:
+                          description: Set specifies a list of HTTP header values
+                            that will be set in the HTTP header. If the header does
+                            not exist it will be added, otherwise it will be overwritten
+                            with the new value.
+                          items:
+                            description: HeaderValue represents a header name/value
+                              pair
+                            properties:
+                              name:
+                                description: Name represents a key of a header
+                                minLength: 1
+                                type: string
+                              value:
+                                description: Value represents the value of a header
+                                  specified by a key
+                                minLength: 1
+                                type: string
+                            required:
+                            - name
+                            - value
+                            type: object
+                          type: array
+                      type: object
+                    serviceName:
+                      type: string
+                    status:
+                      type: string
+                    type:
+                      type: string
+                    weight:
+                      format: int64
+                      type: integer
+                  required:
+                  - id
+                  - port
+                  - serviceName
+                  - type
+                  type: object
+                type: array
+              certificateSecretName:
+                type: string
+              certificateSecretNamespace:
+                type: string
+              certificatesCA:
+                format: byte
+                type: string
+              certificatesCrt:
+                format: byte
+                type: string
+              certificatesKey:
+                format: byte
+                type: string
+              controller:
+                default: contour
+                enum:
+                - contour
+                - kube-api-gateway
+                - ""
+                type: string
+              enableWebsockets:
+                type: boolean
+              forceApimUsage:
+                type: boolean
+              gatewayClass:
+                type: string
+              healthcheckInterval:
+                format: int64
+                type: integer
+              healthcheckTimeout:
+                format: int64
+                type: integer
+              healthcheckURL:
+                type: string
+              healthyThresholdCount:
+                format: int64
+                type: integer
+              heathCheckEnabled:
+                type: boolean
+              host:
+                type: string
+              idleConnectionTimeout:
+                type: string
+              idleTimeout:
+                type: string
+              ingressName:
+                type: string
+              ipFilterPolicy:
+                properties:
+                  ipAllowCIDR:
+                    items:
+                      type: string
+                    type: array
+                  ipDenyCIDR:
+                    items:
+                      type: string
+                    type: array
+                type: object
+              jwtProvider:
+                properties:
+                  audiences:
+                    items:
+                      type: string
+                    type: array
+                  forwardJWT:
+                    type: boolean
+                  issuer:
+                    type: string
+                  name:
+                    type: string
+                  remoteJWKS:
+                    properties:
+                      cacheDuration:
+                        type: string
+                      timeout:
+                        type: string
+                      uri:
+                        type: string
+                    type: object
+                type: object
+              path:
+                type: string
+              pathFilterPolicy:
+                properties:
+                  delete:
+                    items:
+                      type: string
+                    type: array
+                  get:
+                    items:
+                      type: string
+                    type: array
+                  head:
+                    items:
+                      type: string
+                    type: array
+                  patch:
+                    items:
+                      type: string
+                    type: array
+                  post:
+                    items:
+                      type: string
+                    type: array
+                  put:
+                    items:
+                      type: string
+                    type: array
+                type: object
+              port:
+                type: string
+              protocol:
+                type: string
+              rateLimitPolicy:
+                items:
+                  properties:
+                    requests:
+                      type: integer
+                    unit:
+                      type: string
+                  required:
+                  - requests
+                  - unit
+                  type: object
+                type: array
+              responseTimeout:
+                type: string
+              retryPolicy:
+                properties:
+                  numRetries:
+                    format: int64
+                    type: integer
+                  perTryTimeout:
+                    type: string
+                  retryOn:
+                    items:
+                      description: RetryOn is a string type alias with validation
+                        to ensure that the value is valid.
+                      enum:
+                      - 5xx
+                      - gateway-error
+                      - reset
+                      - connect-failure
+                      - retriable-4xx
+                      - refused-stream
+                      - retriable-status-codes
+                      - retriable-headers
+                      - cancelled
+                      - deadline-exceeded
+                      - internal
+                      - resource-exhausted
+                      - unavailable
+                      type: string
+                    type: array
+                type: object
+              shared:
+                type: boolean
+              strategy:
+                description: 'INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
+                  Important: Run "make" to regenerate code after modifying this file'
+                type: string
+              terminaisonSSL:
+                type: string
+              unhealthyThresholdCount:
+                format: int64
+                type: integer
+            required:
+            - backends
+            - host
+            - path
+            - port
+            - strategy
+            type: object
+          status:
+            description: EndpointStatus defines the observed state of Endpoint
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.1
+  creationTimestamp: null
+  name: authservers.apim.cloudoor.com
+spec:
+  group: apim.cloudoor.com
+  names:
+    kind: AuthServer
+    listKind: AuthServerList
+    plural: authservers
+    singular: authserver
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.type
+      name: Type
+      type: string
+    - jsonPath: .spec.url
+      name: URL
+      type: string
+    - jsonPath: .status.status
+      name: Status
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: AuthServer is the Schema for the authservers API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AuthServerSpec defines the desired state of AuthServer
+            properties:
+              allowEmptyClientSecret:
+                default: false
+                description: 'Optional: Allow empty client secret for OAuth2/OIDC'
+                type: boolean
+              authorizedRedirectDomains:
+                default:
+                - '*'
+                description: 'Optional: Authorized redirect domains for OAuth2/OIDC'
+                items:
+                  type: string
+                type: array
+              basicRealm:
+                default: default
+                description: 'Optional: Basic realm for basic auth server'
+                type: string
+              clientId:
+                description: 'Required: ClientID for OAuth2/OIDC'
+                type: string
+              clientSecret:
+                description: 'Optional: ClientSecret for OAuth2/OIDC'
+                type: string
+              credentials:
+                description: 'Optional: Credentials for token auth server'
+                properties:
+                  basic:
+                    description: 'Optional: Username for token auth server'
+                    items:
+                      properties:
+                        password:
+                          description: 'Required: Password for basic auth server'
+                          type: string
+                        roles:
+                          description: 'Optional: Roles for basic auth server'
+                          items:
+                            type: string
+                          type: array
+                        username:
+                          description: 'Required: Username for basic auth server'
+                          type: string
+                      type: object
+                    type: array
+                  token:
+                    description: 'Optional: Token for token auth server'
+                    items:
+                      properties:
+                        roles:
+                          description: 'Optional: Roles for token auth server'
+                          items:
+                            type: string
+                          type: array
+                        token:
+                          description: 'Required: Token for token auth server'
+                          type: string
+                      type: object
+                    type: array
+                type: object
+              emailClaim:
+                default: email
+                description: 'Optional: Email claim for OAuth2/OIDC'
+                type: string
+              groupsClaim:
+                default: groups
+                description: 'Optional: Groups claim for OAuth2/OIDC'
+                type: string
+              image:
+                default: docker.io/beopenit/contour-authserver:latest
+                description: 'Optional: Image:version of the auth server'
+                pattern: ^[^:]+:[^:]+$
+                type: string
+              imagePullPolicy:
+                default: IfNotPresent
+                description: 'Optional: ImagePullPolicy of the auth server'
+                enum:
+                - Always
+                - Never
+                - IfNotPresent
+                type: string
+              issuerURL:
+                description: Issuer URL for OAuth2/OIDC
+                pattern: ^https?://[^/]+(/.*)?$
+                type: string
+              pathFilterPolicy:
+                description: 'Optional: Allowed paths for OAuth2/OIDC'
+                properties:
+                  delete:
+                    items:
+                      type: string
+                    type: array
+                  get:
+                    items:
+                      type: string
+                    type: array
+                  head:
+                    items:
+                      type: string
+                    type: array
+                  patch:
+                    items:
+                      type: string
+                    type: array
+                  post:
+                    items:
+                      type: string
+                    type: array
+                  put:
+                    items:
+                      type: string
+                    type: array
+                type: object
+              port:
+                default: 9443
+                description: 'Optional: Address of the auth server'
+                type: integer
+              redirectPath:
+                default: /callback
+                description: 'Optional: Redirect path for OAuth2/OIDC'
+                pattern: ^/[^/]+$
+                type: string
+              roleClaim:
+                default: realm_access.roles
+                description: 'Optional: Role claim for OAuth2/OIDC'
+                type: string
+              scopes:
+                default:
+                - openid
+                - profile
+                - email
+                - offline_access
+                description: 'Optional: Scopes for OAuth2/OIDC'
+                items:
+                  type: string
+                type: array
+              type:
+                default: oidc
+                description: Type of the auth server (e.g., "oauth2", "oidc", "basic")
+                enum:
+                - oidc
+                - basic
+                - token
+                type: string
+              usernameClaim:
+                default: nickname
+                description: 'Optional: Username claim for OAuth2/OIDC'
+                type: string
+            required:
+            - type
+            type: object
+          status:
+            description: AuthServerStatus defines the observed state of AuthServer
+            properties:
+              error:
+                description: Error message if status is "Error"
+                type: string
+              lastChecked:
+                description: Last time the status was checked
+                format: date-time
+                type: string
+              status:
+                description: Status of the auth server (e.g., "Ready", "Error")
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
