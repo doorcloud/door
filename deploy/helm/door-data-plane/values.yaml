@@ -168,6 +168,11 @@ doorApiGateway:
     # labels:
     #   app: door-apigateway
 
+  # Delegate door-apigateway-tls to tenant namespaces so HTTPProxies can
+  # reference the shared gateway certificate cross-namespace (Contour requirement).
+  tlsDelegation:
+    enabled: true
+
   # Branded catch-all for unmatched gateway traffic + attaches a route to the
   # HTTPS listener so Contour programs Envoy :8443 (fixes TCP-refused on 443).
   defaultBackend:
