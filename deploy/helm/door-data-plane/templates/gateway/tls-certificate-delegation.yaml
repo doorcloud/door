@@ -1,0 +1,17 @@
+{{- if and .Values.doorApiGateway.tlsDelegation.enabled (or (eq .Values.doorApiGateway.external.type "loadBalancer") (eq .Values.doorApiGateway.external.type "hostPort")) }}
+# Allow tenant HTTPProxies in any namespace to reference the shared
+# door-apigateway-tls secret (cross-namespace TLS cert delegation).
+apiVersion: projectcontour.io/v1
+kind: TLSCertificateDelegation
+metadata:
+  name: door-apigateway-tls-delegation
+  namespace: door-apigateway
+  labels:
+    app.kubernetes.io/name: door-apigateway-tls-delegation
+    app.kubernetes.io/part-of: door-apigateway
+spec:
+  delegations:
+    - secretName: door-apigateway-tls
+      targetNamespaces:
+        - "*"
+{{- end }}
