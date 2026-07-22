@@ -2,8 +2,40 @@ apiVersion: v1
 entries:
   door-agent:
   - apiVersion: v2
+    appVersion: v3.0.17
+    created: "2026-07-22T21:40:08.530659Z"
+    dependencies:
+    - alias: metrics-server
+      condition: doorAgent.metricServer
+      name: metrics-server
+      repository: https://kubernetes-sigs.github.io/metrics-server
+      version: 3.8.2
+    description: Chart for DOOR agent
+    digest: 0e38db6bc450b07c5c8e2185a1051f6213acb05f42801b76d6ebb083d8b32aca
+    name: door-agent
+    type: application
+    urls:
+    - https://doorcloud.github.io/door/door-agent-v3.0.17.tgz
+    version: v3.0.17
+  - apiVersion: v2
+    appVersion: v3.0.16
+    created: "2026-07-22T21:40:08.523358Z"
+    dependencies:
+    - alias: metrics-server
+      condition: doorAgent.metricServer
+      name: metrics-server
+      repository: https://kubernetes-sigs.github.io/metrics-server
+      version: 3.8.2
+    description: Chart for DOOR agent
+    digest: 9b307e724a2e71e0dd87df45a0d3820eedcf80a4431363e6aabf8e7f9c035ae7
+    name: door-agent
+    type: application
+    urls:
+    - https://doorcloud.github.io/door/door-agent-v3.0.16.tgz
+    version: v3.0.16
+  - apiVersion: v2
     appVersion: v3.0.15
-    created: "2026-07-22T12:22:49.184369Z"
+    created: "2026-07-22T21:40:08.514672Z"
     dependencies:
     - alias: metrics-server
       condition: doorAgent.metricServer
@@ -19,7 +51,7 @@ entries:
     version: v3.0.15
   - apiVersion: v2
     appVersion: v3.0.14
-    created: "2026-07-22T12:22:49.167234Z"
+    created: "2026-07-22T21:40:08.506934Z"
     dependencies:
     - alias: metrics-server
       condition: doorAgent.metricServer
@@ -35,7 +67,7 @@ entries:
     version: v3.0.14
   - apiVersion: v2
     appVersion: v3.0.13
-    created: "2026-07-22T12:22:49.149623Z"
+    created: "2026-07-22T21:40:08.500191Z"
     dependencies:
     - alias: metrics-server
       condition: doorAgent.metricServer
@@ -49,4 +81,4 @@ entries:
     urls:
     - https://doorcloud.github.io/door/door-agent-v3.0.13.tgz
     version: v3.0.13
-generated: "2026-07-22T12:22:49.124984Z"
+generated: "2026-07-22T21:40:08.486324Z"
