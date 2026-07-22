@@ -1,0 +1,80 @@
+name: Sync door-agent Helm chart
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-door-agent-chart
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Python dependencies
+        run: |
+          pip install pyyaml
+
+      - name: Checkout doorcloud/door (main)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync door-agent chart to main docs/
+        id: sync-main
+        run: |
+          set -euo pipefail
+
+          changed=$(python3 .github/scripts/sync-door-agent-chart.py \
+            --source-index https://raw.githubusercontent.com/beopencloud/cno/main/docs/index.yaml \
+            --target-index docs/index.yaml \
+            --source-url-base https://beopencloud.github.io/cno \
+            --target-url-base https://raw.githubusercontent.com/doorcloud/door/main/docs \
+            --target-dir docs | sed -n 's/^changed=//p')
+
+          echo "changed=${changed}" >> "${GITHUB_OUTPUT}"
+
+      - name: Commit and push main docs/
+        if: steps.sync-main.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/
+          git diff --cached --quiet || git commit -m "chore: sync door-agent chart from beopencloud/cno"
+          git push
+
+      - name: Checkout doorcloud/door (gh-pages)
+        if: steps.sync-main.outputs.changed == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: gh-pages
+
+      - name: Sync door-agent chart to gh-pages
+        if: steps.sync-main.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+
+          python3 .github/scripts/sync-door-agent-chart.py \
+            --source-index docs/index.yaml \
+            --target-index gh-pages/index.yaml \
+            --source-url-base https://raw.githubusercontent.com/doorcloud/door/main/docs \
+            --target-url-base https://doorcloud.github.io/door \
+            --target-dir gh-pages
+
+      - name: Commit and push gh-pages
+        if: steps.sync-main.outputs.changed == 'true'
+        working-directory: gh-pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git diff --cached --quiet || git commit -m "chore: sync door-agent chart from beopencloud/cno"
+          git push
