@@ -59,14 +59,20 @@ getPackage() {
     userid=$(id -u)
 
     suffix=""
+    arch=$(uname -m)
     case $uname in
     "Darwin")
-    suffix="_Darwin_x86_64"
+        case $arch in
+        "arm64") suffix="_Darwin_arm64" ;;
+        *) suffix="_Darwin_x86_64" ;;
+        esac
     ;;
     "Linux")
-        arch=$(uname -m)
-        echo $arch
-        suffix="_Linux_x86_64"
+        case $arch in
+        "aarch64" | "arm64") suffix="_Linux_arm64" ;;
+        "i386" | "i686") suffix="_Linux_i386" ;;
+        *) suffix="_Linux_x86_64" ;;
+        esac
     ;;
     esac
 
