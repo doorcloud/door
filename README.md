@@ -27,6 +27,25 @@ The chart installs Contour/Envoy (Door APIM gateway), optional operators, and a
 branded **default backend** catch-all so the HTTPS listener always has an
 attached route.
 
+## Install doorctl
+
+### macOS and Linux
+
+```bash
+curl -sSL https://raw.githubusercontent.com/doorcloud/door/main/scripts/doorctl.sh | sh -s
+```
+
+Set `DOORCTL_INSTALL_DIR` to override the installation directory.
+
+### Windows (PowerShell)
+
+```powershell
+powershell -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/doorcloud/door/main/scripts/doorctl.ps1 | iex"
+```
+
+Set `DOORCTL_VERSION`, `DOORCTL_INSTALL_DIR`, or `DOORCTL_NO_PATH_UPDATE` before
+running the installer to override its defaults.
+
 ## Install
 
 ```bash
