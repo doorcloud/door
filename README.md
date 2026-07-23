@@ -1,4 +1,39 @@
-# Door dataplane
+# Door distribution
+
+Public distribution channel for Door: the `doorctl` CLI and the `door-agent`
+Helm chart both ship from this repository.
+
+## Install the `doorctl` CLI
+
+`doorctl` manages your Door clusters, projects, and environments from the
+terminal. Pick the channel that fits your platform:
+
+| Channel | Command |
+|---|---|
+| **Homebrew** (macOS / Linux) | `brew install doorcloud/door/doorctl` |
+| **Install script** (macOS / Linux) | `curl -sSL https://raw.githubusercontent.com/doorcloud/door/main/scripts/doorctl.sh \| sh -s` |
+| **Direct download** | Grab the archive for your OS/arch from the [latest release](https://github.com/doorcloud/door/releases/latest) |
+
+The install script detects your processor, verifies release checksums, and
+installs without `sudo` when a user-writable directory is available (falling
+back to `~/.local/bin`). Pin a specific version by passing it as an argument:
+`... | sh -s -- v2.6.0`.
+
+After installing, connect the CLI to your console:
+
+```bash
+doorctl config --server-url <YOUR_DOOR_URL> --organization <YOUR_ORG>
+doorctl login --token <YOUR_CLI_TOKEN> --organization <YOUR_ORG>
+doorctl version
+```
+
+> **Migrating from the old channels?** The legacy `beopencloud/cno` tap, release
+> feed, and install script are **deprecated**. They still work and now redirect
+> to this channel, but please update your scripts to the commands above. If you
+> installed from the old tap, run `brew uninstall doorctl && brew untap
+> beopencloud/cno` before `brew install doorcloud/door/doorctl`.
+
+## Door dataplane Helm chart (`door-agent`)
 
 Public Helm chart for the Door dataplane (`door-agent`).
 
